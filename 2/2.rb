@@ -16,7 +16,7 @@ def get_power(game)
   MAX_COUNTS.each_key.map do |name|
     regex = /(\d+) #{name}/
     game.scan(regex).map { _1.first.to_i }.max || 0
-  end.reduce(1, &:*)
+  end.reduce(&:*)
 end
 
 @sum = 0
