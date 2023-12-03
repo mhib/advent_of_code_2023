@@ -62,9 +62,10 @@ def num_length(n)
 end
 
 def parse_adjacent(y, x)
-  while x > 0 && NUMS.cover?(@input[y][x - 1])
+  while x >= 0 && NUMS.cover?(@input[y][x])
     x -= 1
   end
+  x += 1
 
   num = 0
   while x < @width
