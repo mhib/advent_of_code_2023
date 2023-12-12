@@ -14,11 +14,11 @@ def count_possibilities(line, counts)
     
     count_needed = counts[counts_idx]
 
-    matched_count = true
+    count_matched = true
     start.upto(start + count_needed - 1) do |line_i|
       char = line[line_i]
       unless char == '#' || char == '?'
-        matched_count = false
+        count_matched = false
         break
       end
     end
@@ -28,7 +28,7 @@ def count_possibilities(line, counts)
     if line[start] != '#'
       sum += aux.(start + 1, counts_idx)
     end
-    if matched_count && line[start + count_needed] != '#'
+    if count_matched && line[start + count_needed] != '#'
       sum += aux.(start + count_needed + 1, counts_idx + 1)
     end
     
