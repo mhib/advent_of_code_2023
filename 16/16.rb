@@ -63,15 +63,27 @@ def visit(map, pos, direction)
     if char == '.'
       new_direction = direction
     elsif char == '/'
-      new_direction = DOWN if direction == LEFT
-      new_direction = RIGHT if direction == UP
-      new_direction = UP if direction == RIGHT
-      new_direction = LEFT if direction == DOWN
-    else
-      new_direction = UP if direction == LEFT
-      new_direction = LEFT if direction == UP
-      new_direction = DOWN if direction == RIGHT
-      new_direction = RIGHT if direction == DOWN
+      new_direction = case direction
+                      when LEFT
+                        DOWN
+                      when UP
+                        RIGHT
+                      when RIGHT
+                        UP
+                      else
+                        LEFT
+                      end
+    else # == '\\'
+      new_direction = case direction
+                      when LEFT
+                        UP
+                      when UP
+                        LEFT
+                      when RIGHT
+                        DOWN
+                      else
+                        RIGHT
+                      end
     end
 
     new_pos = apply_move(pos, new_direction)
