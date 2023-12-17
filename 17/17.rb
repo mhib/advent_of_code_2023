@@ -84,12 +84,27 @@ def find_shortest(map)
 
 end
 
+class Dist
+  def initialize(length, width, max_moves)
+    @arr = Array.new(4) { Array.new(max_moves) { Array.new(length) { Array.new(width) } } }
+  end
+
+  def [](state)
+    @arr[state.direction][state.count][state.pos[0]][state.pos[1]]
+  end
+
+  def []=(state, value)
+    @arr[state.direction][state.count][state.pos[0]][state.pos[1]] = value
+  end
+end
+
 def find_shortest_second(map)
   heap = PairingHeap::SimplePairingHeap.new
-  dist = {}
 
   length = map.size
   width = map[0].size
+
+  dist = Dist.new(length, width, 11)
 
   is_pos_valid = lambda do |pos|
     pos[0] >= 0 && pos[0] < length && pos[1] >= 0 && pos[1] < width
@@ -100,6 +115,7 @@ def find_shortest_second(map)
 
   right = State.new([0, 1], RIGHT, 1)
   down = State.new([1, 0], DOWN, 1)
+
   dist[right] = map[0][1]
   dist[down] = map[1][0]
 
@@ -108,6 +124,8 @@ def find_shortest_second(map)
 
   while heap.any?
     state, d = heap.pop_with_priority
+
+    next if d != dist[state]
 
     if state.pos == destination && state.count >= 4
       return d
@@ -123,13 +141,11 @@ def find_shortest_second(map)
         new_pos = apply_move(state.pos, dir)
         next unless is_pos_valid[new_pos]
         new_state = State.new(new_pos, dir, 1)
+
         prev_d = dist[new_state]
         new_d = d + map[new_pos[0]][new_pos[1]]
-        if prev_d.nil?
+        if prev_d.nil? || prev_d > new_d
           heap.push(new_state, new_d)
-          dist[new_state] = new_d
-        elsif prev_d > new_d
-          heap.change_priority(new_state, new_d)
           dist[new_state] = new_d
         end
       end
@@ -141,11 +157,8 @@ def find_shortest_second(map)
       new_state = State.new(new_pos, state.direction, state.count + 1)
       prev_d = dist[new_state]
       new_d = d + map[new_pos[0]][new_pos[1]]
-      if prev_d.nil?
+      if prev_d.nil? || prev_d > new_d
         heap.push(new_state, new_d)
-        dist[new_state] = new_d
-      elsif prev_d > new_d
-        heap.change_priority(new_state, new_d)
         dist[new_state] = new_d
       end
     end
