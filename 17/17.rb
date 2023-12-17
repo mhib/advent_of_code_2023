@@ -12,6 +12,13 @@ MOVE_DELTAS = [
   [0, -1]
 ]
 
+OPPOSITE_MAPPINGS = [
+  [LEFT, RIGHT],
+  [UP, DOWN],
+  [LEFT, RIGHT],
+  [UP, DOWN],
+]
+
 def apply_move(pos, move)
   delta = MOVE_DELTAS[move]
   [
@@ -52,12 +59,7 @@ def find_shortest(map)
       return d
     end
 
-    new_dirs = if (state.direction == LEFT || state.direction == RIGHT)
-                [UP, DOWN]
-               else
-                [LEFT, RIGHT]
-               end
-    new_dirs.each do |dir|
+    OPPOSITE_MAPPINGS[state.direction].each do |dir|
       new_pos = apply_move(state.pos, dir)
       next unless is_pos_valid[new_pos]
       new_state = State.new(new_pos, dir, 1)
@@ -132,12 +134,7 @@ def find_shortest_second(map)
     end
 
     if state.count >= 4
-      new_dirs = if (state.direction == LEFT || state.direction == RIGHT)
-                  [UP, DOWN]
-                else
-                  [LEFT, RIGHT]
-                end
-      new_dirs.each do |dir|
+      OPPOSITE_MAPPINGS[state.direction].each do |dir|
         new_pos = apply_move(state.pos, dir)
         next unless is_pos_valid[new_pos]
         new_state = State.new(new_pos, dir, 1)
