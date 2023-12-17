@@ -50,7 +50,6 @@ def find_shortest(map)
 
     if state.pos == destination
       return d
-      next
     end
 
     new_dirs = if (state.direction == LEFT || state.direction == RIGHT)
@@ -109,7 +108,6 @@ def find_shortest_second(map)
 
   while heap.any?
     state, d = heap.pop_with_priority
-    next if dist[state] != d
 
     if state.pos == destination && state.count >= 4
       return d
@@ -127,9 +125,12 @@ def find_shortest_second(map)
         new_state = State.new(new_pos, dir, 1)
         prev_d = dist[new_state]
         new_d = d + map[new_pos[0]][new_pos[1]]
-        if prev_d.nil? || prev_d > new_d
-          dist[new_state] = new_d
+        if prev_d.nil?
           heap.push(new_state, new_d)
+          dist[new_state] = new_d
+        elsif prev_d > new_d
+          heap.change_priority(new_state, new_d)
+          dist[new_state] = new_d
         end
       end
     end
@@ -140,9 +141,12 @@ def find_shortest_second(map)
       new_state = State.new(new_pos, state.direction, state.count + 1)
       prev_d = dist[new_state]
       new_d = d + map[new_pos[0]][new_pos[1]]
-      if prev_d.nil? || prev_d > new_d
-        dist[new_state] = new_d
+      if prev_d.nil?
         heap.push(new_state, new_d)
+        dist[new_state] = new_d
+      elsif prev_d > new_d
+        heap.change_priority(new_state, new_d)
+        dist[new_state] = new_d
       end
     end
   end
