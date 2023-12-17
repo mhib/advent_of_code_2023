@@ -41,7 +41,6 @@ def find_shortest(map)
   end
 
   destination =  [length - 1, width - 1]
-  visited_destination = 0
 
   right = State.new([0, 1], RIGHT, 1)
   down = State.new([1, 0], DOWN, 1)
@@ -113,7 +112,6 @@ def find_shortest_second(map)
   end
 
   destination =  [length - 1, width - 1]
-  visited_destination = 0
 
   right = State.new([0, 1], RIGHT, 1)
   down = State.new([1, 0], DOWN, 1)
